@@ -1,0 +1,37 @@
+{
+  "name": "@crowsi/browser-security",
+  "version": "0.10.0",
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "Standalone local browser access and Crowsi owner ceremonies",
+  "files": [
+    "src",
+    "bin",
+    "README.md",
+    "LICENSE",
+    "NOTICE",
+    "LICENSE-PREVIOUS"
+  ],
+  "exports": {
+    "./access": "./src/access.mjs",
+    "./client": {
+      "types": "./src/client.d.mts",
+      "default": "./src/client.mjs"
+    },
+    "./owner": "./src/owner-security.mjs",
+    "./boundary": "./src/boundary.mjs",
+    "./demo": "./bin/demo.mjs",
+    "./provision": "./src/provision.mjs"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "demo": "node bin/demo.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/crowsi-net/crowsi-browser-security.git"
+  }
+}
