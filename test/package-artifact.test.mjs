@@ -5,13 +5,13 @@ import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { spawnSync } from 'node:child_process'
 import test from 'node:test'
-test('packed artifact starts without Hatter, source neighbours, installation scripts or runtime dependencies', async t => {
+test('packed artifact runs independently using only its published files', async t => {
   const root = await mkdtemp(join(tmpdir(), 'crowsi-package-'))
   t.after(() => rm(root, { recursive: true, force: true }))
-  const archive = join(root, 'browser-security.tgz')
-  const pack = spawnSync('pnpm', ['pack', '--out', archive], {
+  const pack = spawnSync('npm', ['pack', '--ignore-scripts', '--json', '--pack-destination', root], {
     cwd: new URL('../', import.meta.url), encoding: 'utf8', timeout: 30_000 })
-  assert.equal(pack.status, 0, pack.stderr)
+  assert.equal(pack.status, 0, pack.error?.message ?? pack.stderr)
+  const archive = join(root, JSON.parse(pack.stdout)[0].filename)
   const unpack = spawnSync('tar', ['-xzf', archive, '-C', root], { encoding: 'utf8' })
   assert.equal(unpack.status, 0, unpack.stderr)
   const manifest = JSON.parse(await readFile(join(root, 'package/package.json')))
