@@ -49,6 +49,6 @@ pnpm test
 pnpm run demo
 ```
 
-The demo binds only `127.0.0.1`. Its port defaults to 4317; callers of `startDemo` can select another port. Demo headers permit inline content and are an example policy: a production host must choose a CSP appropriate to its own frontend.
+The demo binds only `127.0.0.1`. Its port defaults to 4317; callers of `startDemo` can select another port. Default headers block inline scripts and styles. Hosts that require inline content can pass `scriptNonce` or `styleNonce` to `securityHeaders`, using a fresh cryptographically random base64url nonce of at least 16 bytes for each response and matching HTML nonce attributes. A production host must select a CSP appropriate to its frontend.
 
 [Usage](docs/getting-started.md) · [Security reporting](SECURITY.md) · [License](LICENSE) · [Notices](NOTICE)

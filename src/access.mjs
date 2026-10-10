@@ -20,7 +20,7 @@ const noncePattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0
 export class SessionAuthority {
   constructor({ launchToken = null, ttlMs = 8 * 60 * 60 * 1000,
     maxSessions = 32, now = Date.now, random = randomBytes } = {}) {
-    if (launchToken !== null && !tokenPattern.test(launchToken) || !Number.isSafeInteger(ttlMs) || ttlMs < 60_000
+    if (launchToken !== null && (typeof launchToken !== 'string' || !tokenPattern.test(launchToken)) || !Number.isSafeInteger(ttlMs) || ttlMs < 60_000
       || ttlMs > 86_400_000 || !Number.isSafeInteger(maxSessions) || maxSessions < 1 || maxSessions > 256) {
       throw new Error('crowsi-browser-security-launch-configuration-invalid')
     }
@@ -68,7 +68,7 @@ export class SessionAuthority {
     if (!constantEquals(csrfToken, session.csrfToken)) {
       throw new Error('crowsi-browser-security-csrf-rejected')
     }
-    if (!noncePattern.test(nonce)) throw new Error('crowsi-browser-security-request-nonce-invalid')
+    if (typeof nonce !== 'string' || !noncePattern.test(nonce)) throw new Error('crowsi-browser-security-request-nonce-invalid')
     if (session.nonces.has(nonce)) throw new Error('crowsi-browser-security-request-replayed')
     if (session.nonces.size >= 65_536) {
       throw new Error('crowsi-browser-security-request-nonce-capacity-reached')

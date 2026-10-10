@@ -4,6 +4,7 @@ const loopbackAuthority = /^(localhost|127\.0\.0\.1|\[::1\]):([0-9]{1,5})$/i
 
 /** Defines the sole browser origin admitted by an owner-local console process. */
 export function parseOwnerOrigin(value) {
+  if (typeof value !== 'string') invalid()
   let url
   try { url = new URL(value) } catch { invalid() }
   if (!['http:', 'https:'].includes(url.protocol)
@@ -37,13 +38,20 @@ function isOwnerLoopbackHost(owner, value) {
   return Number.isSafeInteger(port) && String(port) === match[2] && String(port) === owner.port
 }
 
-export function securityHeaders() {
+export function securityHeaders({ scriptNonce, styleNonce } = {}) {
+  const directive = (kind, nonce) => {
+    if (nonce === undefined) return kind + " 'self'"
+    if (typeof nonce !== 'string' || !/^[A-Za-z0-9_-]{22,128}$/u.test(nonce)) {
+      throw new Error('crowsi-browser-security-csp-nonce-invalid')
+    }
+    return kind + " 'self' 'nonce-" + nonce + "'"
+  }
   return Object.freeze({
     'content-security-policy': [
       "default-src 'self'", "base-uri 'none'", "object-src 'none'",
       "frame-ancestors 'none'", "form-action 'self'", "connect-src 'self'",
-      "img-src 'self' data:", "font-src 'self'", "style-src 'self' 'unsafe-inline'",
-      "script-src 'self' 'unsafe-inline'"
+      "img-src 'self' data:", "font-src 'self'", directive('style-src', styleNonce),
+      directive('script-src', scriptNonce)
     ].join('; '),
     'referrer-policy': 'no-referrer',
     'x-content-type-options': 'nosniff',

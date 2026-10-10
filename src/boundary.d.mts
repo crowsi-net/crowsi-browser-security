@@ -7,4 +7,4 @@ export interface RequestBoundary {
 }
 export function parseOwnerOrigin(value: string): Readonly<OwnerOrigin>
 export function assessRequestBoundary(owner: OwnerOrigin, request: RequestBoundary): string | null
-export function securityHeaders(): Readonly<Record<string, string>>
+export function securityHeaders(options?: { scriptNonce?: string; styleNonce?: string }): Readonly<Record<string, string>>
