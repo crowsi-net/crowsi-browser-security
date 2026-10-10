@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from 'node:crypto'
 import {
-  chmodSync, closeSync, copyFileSync, existsSync, fsyncSync, lstatSync, mkdirSync,
+  chmodSync, closeSync, constants, copyFileSync, existsSync, fstatSync, fsyncSync, lstatSync, mkdirSync,
   openSync, readFileSync, realpathSync, renameSync, rmSync, writeFileSync
 } from 'node:fs'
 import { dirname, isAbsolute, join, resolve } from 'node:path'
@@ -57,7 +57,12 @@ export function ownerFile(path, maximum = 1_048_576, executable = false) {
 
 export function readPrivateJson(path, maximum = 65_536) {
   requireOwnerFile(path, maximum)
-  return JSON.parse(readFileSync(path, 'utf8'))
+  const descriptor = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW)
+  try {
+    const value = fstatSync(descriptor)
+    requireOwnerMetadata(value, maximum, false)
+    return JSON.parse(readFileSync(descriptor, 'utf8'))
+  } finally { closeSync(descriptor) }
 }
 
 function ownerDirectory(path) {
@@ -71,11 +76,17 @@ function ownerDirectory(path) {
 
 function requireOwnerFile(path, maximum, executable = false) {
   const value = lstatSync(path)
-  if (!value.isFile() || value.isSymbolicLink() || value.uid !== process.getuid?.()
-    || (value.mode & 0o022) !== 0 || value.size < 1 || value.size > maximum
-    || realpathSync(path) !== path || (executable && (value.mode & 0o111) === 0)) {
+  requireOwnerMetadata(value, maximum, executable)
+  if (value.isSymbolicLink() || realpathSync(path) !== path) {
     fail(`Owner-only file is unsafe: ${path}`)
   }
+}
+
+/** Private state must be inaccessible to other users and have no shared inode. */
+function requireOwnerMetadata(value, maximum, executable) {
+  if (!value.isFile() || value.uid !== process.getuid?.() || value.nlink !== 1
+    || (value.mode & 0o077) !== 0 || value.size < 1 || value.size > maximum
+    || (executable && (value.mode & 0o111) === 0)) fail('owner-file-unsafe')
 }
 
 function digestFile(path) {
