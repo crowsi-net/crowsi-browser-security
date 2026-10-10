@@ -3,7 +3,7 @@
   "version": "0.10.0",
   "type": "module",
   "license": "Apache-2.0",
-  "description": "Standalone local browser access and Crowsi owner ceremonies",
+  "description": "Loopback browser boundaries, bounded sessions and explicit native owner ceremonies",
   "files": [
     "src",
     "bin",
@@ -13,25 +13,49 @@
     "LICENSE-PREVIOUS"
   ],
   "exports": {
-    "./access": "./src/access.mjs",
+    "./access": {
+      "types": "./src/access.d.mts",
+      "import": "./src/access.mjs"
+    },
     "./client": {
       "types": "./src/client.d.mts",
-      "default": "./src/client.mjs"
+      "import": "./src/client.mjs"
     },
-    "./owner": "./src/owner-security.mjs",
-    "./boundary": "./src/boundary.mjs",
-    "./demo": "./bin/demo.mjs",
-    "./provision": "./src/provision.mjs"
+    "./owner": {
+      "types": "./src/owner-security.d.mts",
+      "import": "./src/owner-security.mjs"
+    },
+    "./boundary": {
+      "types": "./src/boundary.d.mts",
+      "import": "./src/boundary.mjs"
+    },
+    "./demo": {
+      "types": "./bin/demo.d.mts",
+      "import": "./bin/demo.mjs"
+    },
+    "./provision": {
+      "types": "./src/provision.d.mts",
+      "import": "./src/provision.mjs"
+    }
   },
   "scripts": {
     "test": "node --test test/*.test.mjs",
-    "demo": "node bin/demo.mjs"
+    "demo": "node bin/demo.mjs",
+    "typecheck": "tsc -p tsconfig.json"
   },
   "engines": {
     "node": ">=22"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/crowsi-net/crowsi-browser-security.git"
-  }
+    "url": "git+https://github.com/crowsi-net/crowsi-browser-security.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  },
+  "packageManager": "pnpm@10.29.3"
 }
