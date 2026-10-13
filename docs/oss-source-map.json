@@ -1,0 +1,189 @@
+{
+  "repository": "crowsi-net/crowsi-browser-security",
+  "purpose": "Compose browser bootstrap, session and CSRF checks for a caller-owned authentication flow.",
+  "responsibility_boundary": "Own the named security/transport mechanism and its explicit trust boundary. Product account/storage/UI composition belongs to the consumer. Tests must not substitute declarations for enforced authority or live environment acceptance.",
+  "packages": [
+    {
+      "manifest": "package.json",
+      "package": "@crowsi/browser-security",
+      "ecosystem": "npm",
+      "description": "Loopback browser boundaries, bounded sessions and explicit native owner ceremonies",
+      "interfaces": {
+        "exports": {
+          "./access": {
+            "types": "./src/access.d.mts",
+            "import": "./src/access.mjs"
+          },
+          "./client": {
+            "types": "./src/client.d.mts",
+            "import": "./src/client.mjs"
+          },
+          "./owner": {
+            "types": "./src/owner-security.d.mts",
+            "import": "./src/owner-security.mjs"
+          },
+          "./boundary": {
+            "types": "./src/boundary.d.mts",
+            "import": "./src/boundary.mjs"
+          },
+          "./demo": {
+            "types": "./bin/demo.d.mts",
+            "import": "./bin/demo.mjs"
+          },
+          "./provision": {
+            "types": "./src/provision.d.mts",
+            "import": "./src/provision.mjs"
+          }
+        },
+        "bin": {},
+        "main": null,
+        "types": null
+      },
+      "declared_commands": {
+        "test": "node --test test/*.test.mjs",
+        "demo": "node bin/demo.mjs",
+        "typecheck": "tsc -p tsconfig.json"
+      }
+    }
+  ],
+  "schema_definitions": [],
+  "test_sources": [
+    "bin/demo.mjs",
+    "test/client.test.mjs",
+    "test/crowsi-owner-security.test.mjs",
+    "test/demo.test.mjs",
+    "test/directory-boundary.test.mjs",
+    "test/internal-session.test.mjs",
+    "test/native-budget-regression.test.mjs",
+    "test/nonce-type-regression.test.mjs",
+    "test/package-artifact.test.mjs",
+    "test/private-state-regression.test.mjs",
+    "test/provision.test.mjs",
+    "test/session-authority.test.mjs",
+    "test/session-capacity.test.mjs"
+  ],
+  "example_sources": [],
+  "workflow_definitions": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "jobs": [
+        {
+          "job": "test",
+          "condition": null,
+          "runs_on": "ubuntu-latest",
+          "steps": [
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "condition": null
+            },
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+              "condition": null
+            },
+            {
+              "name": "Test Node contracts",
+              "run": "node --test test/*.test.mjs",
+              "uses": null,
+              "condition": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/oss-policy.yml",
+      "jobs": [
+        {
+          "job": "repository-policy",
+          "condition": null,
+          "runs_on": "ubuntu-latest",
+          "steps": [
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+              "condition": null
+            },
+            {
+              "name": "Verify repository policy",
+              "run": "python3 .github/oss-policy-check.py",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": "Verify policy regression tests",
+              "run": "cd .github && python3 -m unittest discover -s policy-tests",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": "Check policy types",
+              "run": "python3 -m venv \"$RUNNER_TEMP/policy-types\"\n\"$RUNNER_TEMP/policy-types/bin/pip\" install -r .github/policy/requirements.txt\n\"$RUNNER_TEMP/policy-types/bin/mypy\" --strict .github/policy .github/oss-policy-check.py .github/policy-tests\n",
+              "uses": null,
+              "condition": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/prepare-npm-artifact.yml",
+      "jobs": [
+        {
+          "job": "npm-package",
+          "condition": null,
+          "runs_on": "ubuntu-24.04",
+          "steps": [
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+              "condition": null
+            },
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38",
+              "condition": null
+            },
+            {
+              "name": "Isolate public registry configuration",
+              "run": ": > \"$RUNNER_TEMP/user.npmrc\"\n: > \"$RUNNER_TEMP/global.npmrc\"\necho \"NPM_CONFIG_USERCONFIG=$RUNNER_TEMP/user.npmrc\" >> \"$GITHUB_ENV\"\necho \"NPM_CONFIG_GLOBALCONFIG=$RUNNER_TEMP/global.npmrc\" >> \"$GITHUB_ENV\"\necho \"NPM_CONFIG_REGISTRY=https://registry.npmjs.org\" >> \"$GITHUB_ENV\"\n",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": null,
+              "run": "npm install --global --ignore-scripts --no-audit --no-fund pnpm@10.29.3",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": "Validate workspace and dependency graph",
+              "run": "pnpm install --frozen-lockfile --ignore-scripts\npnpm run typecheck\npnpm test\npnpm audit --audit-level=low\n",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": "Pack exact source distributions without lifecycle hooks",
+              "run": "mkdir outgoing\nnpm pack --ignore-scripts --json --pack-destination \"$GITHUB_WORKSPACE/outgoing\"\nprintf '%s\\n' \"$GITHUB_SHA\" > outgoing/source-sha.txt\n(cd outgoing && sha256sum ./*.tgz > SHA256SUMS)\n",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+              "condition": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "evidence_policy": "Declarations and source paths are not proof of an executed acceptance. Exact CI head and result are recorded separately. No live accounts or production acceptance is inferred."
+}
