@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "repository": "crowsi-net/crowsi-browser-security",
+  "defaultBranch": "main",
+  "requiredWorkflows": [
+    "ci.yml",
+    "oss-policy.yml",
+    "prepare-npm-artifact.yml"
+  ],
+  "packages": [
+    {
+      "ecosystem": "npm",
+      "manifest": "package.json",
+      "name": "@crowsi/browser-security",
+      "installDirectory": "."
+    }
+  ]
+}
