@@ -5,7 +5,7 @@ Guard a caller-owned loopback HTTP service against cross-origin requests, replay
 ## Install and protect a loopback service
 
 ```sh
-npm install @crowsi/browser-security@0.10.0
+npm install @crowsi/browser-security
 ```
 
 ```typescript
@@ -54,3 +54,6 @@ The demo binds only `127.0.0.1`. Its port defaults to 4317; callers of `startDem
 [Usage](docs/getting-started.md) · [Security reporting](SECURITY.md) · [License](LICENSE) · [Notices](NOTICE)
 
 [OSS responsibility and source completion](docs/oss-source-contract.md) defines the supported package boundary and required acceptance. It does not declare unexecuted source, distribution or production checks complete.
+
+Dependency updates: [repository policy](docs/dependency-updates.md).
+Registry releases: [version tags and GitHub OIDC](docs/registry-release.md).
