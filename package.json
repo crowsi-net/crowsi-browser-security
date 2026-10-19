@@ -57,5 +57,12 @@
   "devDependencies": {
     "typescript": "7.0.2"
   },
-  "packageManager": "pnpm@10.29.3"
+  "packageManager": "pnpm@10.29.3",
+  "keywords": [
+    "csrf",
+    "authentication",
+    "session-management",
+    "web-security",
+    "typescript"
+  ]
 }
