@@ -18,3 +18,26 @@ jobs:
           node-version: '24.22.1'
       - name: Test Node contracts
         run: node --test test/*.test.mjs
+
+  native-boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      CARGO_BUILD_JOBS: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Verify native boundary and source package
+        working-directory: native/browser-boundary
+        run: |
+          cargo fmt --check
+          cargo test --locked
+          cargo clippy --locked --all-targets -- -D warnings
+          cargo package --locked
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: native-browser-boundary-crate
+          path: native/browser-boundary/target/package/crowsi-browser-boundary-*.crate
+          if-no-files-found: error
+          retention-days: 7

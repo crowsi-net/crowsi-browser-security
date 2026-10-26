@@ -1,0 +1,220 @@
+{
+  "schemaVersion": "crowsi-browser-boundary-cases/v1",
+  "ownerCases": [
+    {
+      "input": "http://127.0.0.1:4317",
+      "origin": "http://127.0.0.1:4317"
+    },
+    {
+      "input": "http://LOCALHOST:4317/",
+      "origin": "http://localhost:4317"
+    },
+    {
+      "input": "https://[::1]:4317",
+      "origin": "https://[::1]:4317"
+    },
+    {
+      "input": "http://127.1:4317",
+      "origin": "http://127.0.0.1:4317"
+    },
+    {
+      "input": "https://elsewhere.invalid:4317",
+      "origin": null
+    },
+    {
+      "input": "http://0.0.0.0:4317",
+      "origin": null
+    },
+    {
+      "input": "http://127.0.0.2:4317",
+      "origin": null
+    },
+    {
+      "input": "http://127.0.0.1",
+      "origin": null
+    },
+    {
+      "input": "http://127.0.0.1:80",
+      "origin": null
+    },
+    {
+      "input": "http://127.0.0.1:4317/path",
+      "origin": null
+    },
+    {
+      "input": "http://127.0.0.1:4317/?x=1",
+      "origin": null
+    },
+    {
+      "input": "http://a:b@127.0.0.1:4317",
+      "origin": null
+    },
+    {
+      "input": "http://127.0.0.1:4317/#fragment",
+      "origin": null
+    }
+  ],
+  "requestCases": [
+    {
+      "host": "127.0.0.1:4317",
+      "origin": null,
+      "method": "GET",
+      "fetchSite": null,
+      "error": null
+    },
+    {
+      "host": "localhost:4317",
+      "origin": null,
+      "method": "GET",
+      "fetchSite": null,
+      "error": null
+    },
+    {
+      "host": "LOCALHOST:4317",
+      "origin": null,
+      "method": "GET",
+      "fetchSite": null,
+      "error": null
+    },
+    {
+      "host": "[::1]:4317",
+      "origin": null,
+      "method": "GET",
+      "fetchSite": null,
+      "error": null
+    },
+    {
+      "host": null,
+      "origin": null,
+      "method": "GET",
+      "fetchSite": null,
+      "error": "crowsi-browser-security-host-rejected"
+    },
+    {
+      "host": "127.0.0.1:04317",
+      "origin": null,
+      "method": "GET",
+      "fetchSite": null,
+      "error": "crowsi-browser-security-host-rejected"
+    },
+    {
+      "host": "127.0.0.1:4318",
+      "origin": null,
+      "method": "GET",
+      "fetchSite": null,
+      "error": "crowsi-browser-security-host-rejected"
+    },
+    {
+      "host": "evil.invalid:4317",
+      "origin": null,
+      "method": "GET",
+      "fetchSite": null,
+      "error": "crowsi-browser-security-host-rejected"
+    },
+    {
+      "host": "127.0.0.1:4317 ",
+      "origin": null,
+      "method": "GET",
+      "fetchSite": null,
+      "error": "crowsi-browser-security-host-rejected"
+    },
+    {
+      "host": "[0:0:0:0:0:0:0:1]:4317",
+      "origin": null,
+      "method": "GET",
+      "fetchSite": null,
+      "error": "crowsi-browser-security-host-rejected"
+    },
+    {
+      "host": "127.0.0.1:4317",
+      "origin": null,
+      "method": "POST",
+      "fetchSite": null,
+      "error": "crowsi-browser-security-origin-required"
+    },
+    {
+      "host": "127.0.0.1:4317",
+      "origin": "http://127.0.0.1:4317",
+      "method": "POST",
+      "fetchSite": "same-origin",
+      "error": null
+    },
+    {
+      "host": "127.0.0.1:4317",
+      "origin": null,
+      "method": "PUT",
+      "fetchSite": null,
+      "error": "crowsi-browser-security-origin-required"
+    },
+    {
+      "host": "127.0.0.1:4317",
+      "origin": "http://127.0.0.1:4317",
+      "method": "PUT",
+      "fetchSite": "same-origin",
+      "error": null
+    },
+    {
+      "host": "127.0.0.1:4317",
+      "origin": null,
+      "method": "PATCH",
+      "fetchSite": null,
+      "error": "crowsi-browser-security-origin-required"
+    },
+    {
+      "host": "127.0.0.1:4317",
+      "origin": "http://127.0.0.1:4317",
+      "method": "PATCH",
+      "fetchSite": "same-origin",
+      "error": null
+    },
+    {
+      "host": "127.0.0.1:4317",
+      "origin": null,
+      "method": "DELETE",
+      "fetchSite": null,
+      "error": "crowsi-browser-security-origin-required"
+    },
+    {
+      "host": "127.0.0.1:4317",
+      "origin": "http://127.0.0.1:4317",
+      "method": "DELETE",
+      "fetchSite": "same-origin",
+      "error": null
+    },
+    {
+      "host": "127.0.0.1:4317",
+      "origin": null,
+      "method": "post",
+      "fetchSite": null,
+      "error": "crowsi-browser-security-origin-required"
+    },
+    {
+      "host": "127.0.0.1:4317",
+      "origin": "http://127.0.0.1:4317",
+      "method": "post",
+      "fetchSite": "same-origin",
+      "error": null
+    },
+    {
+      "host": "127.0.0.1:4317",
+      "origin": "http://127.0.0.1:5000",
+      "method": "GET",
+      "fetchSite": null,
+      "error": "crowsi-browser-security-origin-rejected"
+    },
+    {
+      "host": "127.0.0.1:4317",
+      "origin": null,
+      "method": "GET",
+      "fetchSite": "cross-site",
+      "error": "crowsi-browser-security-fetch-site-rejected"
+    },
+    {
+      "host": "127.0.0.1:4317",
+      "origin": "http://127.0.0.1:4317",
+      "method": "POST",
+      "fetchSite": "cross-site",
+      "error": "crowsi-browser-security-fetch-site-rejected"
+    }
+  ]
+}

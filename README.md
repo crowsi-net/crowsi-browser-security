@@ -57,3 +57,10 @@ The demo binds only `127.0.0.1`. Its port defaults to 4317; callers of `startDem
 
 Dependency updates: [repository policy](docs/dependency-updates.md).
 Registry releases: [version tags and GitHub OIDC](docs/registry-release.md).
+
+
+## Native browser metadata boundary
+
+The source-only [crowsi-browser-boundary](native/browser-boundary/README.md) Rust
+crate implements the existing `/boundary` metadata checks, with shared conformance
+vectors. It does not replace owner/session/credential authorities.
