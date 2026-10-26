@@ -1,4 +1,9 @@
-//! HTTP metadata admission only; not identity, sessions, grants or a listener.
+//! Browser metadata and bounded opaque sessions; never human identity or product grants.
+mod session;
+mod session_mutation;
+mod session_token;
+mod session_types;
+pub use session::{BrowserSession, SessionAuthority, SessionError};
 mod origin;
 mod request;
 pub use origin::OwnerOrigin;
