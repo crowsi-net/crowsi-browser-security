@@ -1,0 +1,26 @@
+[package]
+name = "crowsi-browser-boundary"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.97"
+publish = false
+license = "Apache-2.0"
+repository = "https://github.com/crowsi-net/crowsi-browser-security"
+description = "Owner-local browser HTTP metadata admission for native backends"
+include = ["src/**", "tests/**", "test-data/**", "README.md", "LICENSE", "NOTICE", "Cargo.toml"]
+
+[dependencies]
+url = "=2.5.7"
+[dev-dependencies]
+serde_json = "1.0.150"
+
+[lints.rust]
+unsafe_code = "forbid"
+[lints.clippy]
+all = "warn"
+[profile.dev]
+debug = 0
+incremental = false
+[profile.test]
+debug = 0
+incremental = false
