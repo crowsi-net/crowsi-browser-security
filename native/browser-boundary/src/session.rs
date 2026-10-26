@@ -77,7 +77,7 @@ impl SessionAuthority {
                 csrf,
                 expires,
                 expires_ms,
-                nonces: BTreeSet::new(),
+                nonces: Default::default(),
             },
         );
         Ok(BrowserSession {
